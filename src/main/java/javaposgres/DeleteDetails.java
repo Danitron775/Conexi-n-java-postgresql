@@ -68,15 +68,19 @@ public class DeleteDetails extends HttpServlet {
             checkState.setInt(1, id);
             ResultSet checkStateResult = checkState.executeQuery();
             
-            // VARIFICAR SI EL USUARIO ESTÁ ACTIVA
-            boolean idState = checkStateResult.next();
+            // GUARDAR EL RESULTADO EN UNA VARIABLE
+            String idState = null;
 
-            if (idState) {
-            	
-            	// EN CASO DE NO ESTÁR ACTIVO SE CREA UN ERROR
+            if (checkStateResult.next()) {
+                idState = checkStateResult.getString("est_estado");
+            }
+            
+            // VARIFICAR SI EL USUARIO ESTÁ ACTIVO
+            if ("f".equals(idState)) {
+                // EN CASO DE NO ESTAR ACTIVO SE CREA UN ERROR
                 throw new IllegalArgumentException("El usuario especificado ya no existe");
             }
-			
+
             checkState.close();
             checkStateResult.close();
             
