@@ -50,13 +50,35 @@ public class InsertDetails extends HttpServlet {
 				// MENSAJE AL CONECTARSE
 				System.out.println("Conecction succelful");
 				
+				// SENTENCIA SQL PARA VERIFICAR SI EXISTE LA ID
+				PreparedStatement checkId = cnn.prepareStatement("SELECT COUNT(*) FROM estudiante WHERE est_id = ?");
+
+				// ENTREGAR EL VALOR DADO A LA SENTENCIA SQL
+				checkId.setInt(1, id);
+
+				// GUARDAR EL RESULTADO DE LA BASE DE DATOS EN UNA VARIABLE
+				ResultSet checkIdResult = checkId.executeQuery();
+
+				// VERIFICAR SI LA ID ESTÁ REPETIDA EN LA BASE DE DATOS
+				if (checkIdResult.next()) {
+				    int idCount = checkIdResult.getInt(1);
+				    if (idCount > 0) {
+				        // SI ESTÁ REPETIDA: CREAR UN ERROR
+				        throw new IllegalArgumentException("La ID ya está registrada.");
+				    }
+				}
+
+				// CERRAR RECURSOS
+				checkIdResult.close();
+				checkId.close();
+				
 				//SENTENCIA SQL PARA CONTAR LAS VECES EN LAS QUE HAY UN EMAIL
 	            PreparedStatement checkEmail = cnn.prepareStatement("SELECT COUNT(*) FROM estudiante WHERE est_email = ?");
 	            
 	            // ENTREGAR EL VALOR DADO A LA SENTENCIA SQL
 	            checkEmail.setString(1, email);
 	            
-	            // GUARDAR EL RESULTADO DE LA VASE DE DATOS EN UNA VARIABLE
+	            // GUARDAR EL RESULTADO DE LA BASE DE DATOS EN UNA VARIABLE
 	            ResultSet checkEmailResult = checkEmail.executeQuery();
 	            
 	            checkEmailResult.next();

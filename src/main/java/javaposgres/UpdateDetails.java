@@ -63,7 +63,12 @@ public class UpdateDetails extends HttpServlet {
 			st.setString(2, request.getParameter("apellido"));
 			st.setString(3, request.getParameter("email"));
 			st.setInt(4, Integer.valueOf(id));
-
+			
+			// GUARDAR LOS DATOS ACTUALIZADOS EN VARIABLES
+			nombre = request.getParameter("nombre");
+			apellido = request.getParameter("apellido");
+			email = request.getParameter("email");
+				
 			// EJECUTAR LA ACTUALIZACIÓN
 			st.executeUpdate();
 

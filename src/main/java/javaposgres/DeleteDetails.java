@@ -63,6 +63,23 @@ public class DeleteDetails extends HttpServlet {
             checkId.close();
             checkIdResult.close();
             
+            // SENTENCIA CONSULTA SQL PARA CAPTURAR EL ESTADO DE LA ID DADA
+			PreparedStatement checkState = cnn.prepareStatement("SELECT est_estado FROM estudiante WHERE est_id=?");
+            checkState.setInt(1, id);
+            ResultSet checkStateResult = checkState.executeQuery();
+            
+            // VARIFICAR SI EL USUARIO ESTÁ ACTIVA
+            boolean idState = checkStateResult.next();
+
+            if (idState) {
+            	
+            	// EN CASO DE NO ESTÁR ACTIVO SE CREA UN ERROR
+                throw new IllegalArgumentException("El usuario especificado ya no existe");
+            }
+			
+            checkState.close();
+            checkStateResult.close();
+            
             // SENTENCIA SQL PARA ACTUALIZAR EL VALOR DE ESTADO DEL USUARIO A "FALSE" PARA BUENAS PRACTICAS            
 			PreparedStatement st = cnn.prepareStatement("UPDATE estudiante SET est_estado= false WHERE est_id=?");
 			
